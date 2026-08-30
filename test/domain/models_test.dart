@@ -1,8 +1,11 @@
 // Pure-Dart unit tests for the domain models (no Flutter imports here, so
 // the models provably carry no widget dependencies).
 import 'package:block_civilizations/domain/models/board_cell.dart';
+import 'package:block_civilizations/domain/models/civilization.dart';
 import 'package:block_civilizations/domain/models/game_result.dart';
+import 'package:block_civilizations/domain/models/landmark_info.dart';
 import 'package:block_civilizations/domain/models/piece.dart';
+import 'package:block_civilizations/domain/models/stage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -166,6 +169,104 @@ void main() {
       expect(result, isNot(result.copyWith(outcome: GameOutcome.win)));
     });
   });
+
+  group('Civilization', () {
+    test('emblemAsset is optional and defaults to null', () {
+      const civ = Civilization(
+        id: 'iraq',
+        nameKey: 'civIraqName',
+        themeColorHex: '#C9A227',
+        stages: [],
+      );
+
+      expect(civ.emblemAsset, isNull);
+    });
+
+    test('value equality covers every field including stage lists', () {
+      const stages = [
+        Stage(id: 'iraq_01', orderIndex: 1, targetScore: 1000),
+        Stage(id: 'iraq_02', orderIndex: 2, targetScore: 2000),
+      ];
+      const civ = Civilization(
+        id: 'iraq',
+        nameKey: 'civIraqName',
+        emblemAsset: null,
+        themeColorHex: '#C9A227',
+        stages: stages,
+      );
+
+      expect(
+        civ,
+        const Civilization(
+          id: 'iraq',
+          nameKey: 'civIraqName',
+          emblemAsset: null,
+          themeColorHex: '#C9A227',
+          stages: stages,
+        ),
+      );
+      // Different stage content (same length) must break equality.
+      expect(
+        civ,
+        isNot(
+          const Civilization(
+            id: 'iraq',
+            nameKey: 'civIraqName',
+            themeColorHex: '#C9A227',
+            stages: [
+              Stage(id: 'iraq_01', orderIndex: 1, targetScore: 1000),
+              Stage(id: 'iraq_02', orderIndex: 2, targetScore: 9999),
+            ],
+          ),
+        ),
+      );
+      expect(civ, isNot(civ.copyWith(emblemAsset: 'assets/emblem.png')));
+    });
+  });
+
+  group('LandmarkInfo', () {
+    test('value equality', () {
+      const landmark = LandmarkInfo(
+        id: 'ziggurat_of_ur',
+        civilizationId: 'iraq',
+        nameKey: 'landmarkZigguratOfUrName',
+        historicalFactKey: 'landmarkZigguratOfUrFact',
+        imageAsset: 'assets/civilizations/iraq/ziggurat_of_ur.png',
+      );
+
+      expect(
+        landmark,
+        const LandmarkInfo(
+          id: 'ziggurat_of_ur',
+          civilizationId: 'iraq',
+          nameKey: 'landmarkZigguratOfUrName',
+          historicalFactKey: 'landmarkZigguratOfUrFact',
+          imageAsset: 'assets/civilizations/iraq/ziggurat_of_ur.png',
+        ),
+      );
+      expect(landmark, isNot(landmark.copyWith(id: 'ishtar_gate')));
+    });
+  });
+}
+
+extension on Civilization {
+  Civilization copyWith({String? emblemAsset}) => Civilization(
+    id: id,
+    nameKey: nameKey,
+    emblemAsset: emblemAsset ?? this.emblemAsset,
+    themeColorHex: themeColorHex,
+    stages: stages,
+  );
+}
+
+extension on LandmarkInfo {
+  LandmarkInfo copyWith({String? id}) => LandmarkInfo(
+    id: id ?? this.id,
+    civilizationId: civilizationId,
+    nameKey: nameKey,
+    historicalFactKey: historicalFactKey,
+    imageAsset: imageAsset,
+  );
 }
 
 extension on GameResult {

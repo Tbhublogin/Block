@@ -23,4 +23,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get underConstruction => 'Under construction';
+
+  @override
+  String get civIraqName => 'Iraq (Mesopotamia)';
+
+  @override
+  String get landmarkHangingGardensName => 'Hanging Gardens of Babylon';
+
+  @override
+  String get landmarkHangingGardensFact =>
+      'The Hanging Gardens of Babylon are among the most famous monuments attributed to the ancient Babylonian civilization. They are believed to have been built in the city of Babylon during the Neo-Babylonian period (the sixth century BC) and are traditionally associated with King Nebuchadnezzar II. Ancient Greek sources described them as enormous terraced gardens filled with trees and plants, and they were counted among the Seven Wonders of the Ancient World. Their historical existence, however, remains a subject of debate among scholars, as no decisive archaeological evidence has been found to establish their location or final form.';
+
+  @override
+  String get landmarkZigguratOfUrName => 'Great Ziggurat of Ur';
+
+  @override
+  String get landmarkZigguratOfUrFact =>
+      'This monument shows the Ziggurat of the ancient city of Ur, one of the most prominent religious structures of the Sumerian civilization of Mesopotamia. It was built around the third millennium BC, during the Third Dynasty of Ur, and was dedicated to Nanna (Sin), the moon god. It formed a religious center and a symbol of the city\'s power and urban organization. These tiered structures were distinguished by their use of mud brick and represented a symbolic link between the earthly world and the divine world in the beliefs of the people of Mesopotamia.';
+
+  @override
+  String get landmarkTowerOfBabelName => 'Tower of Babel';
+
+  @override
+  String get landmarkTowerOfBabelFact =>
+      'The Tower of Babel is a legendary structure mentioned in the Book of Genesis within ancient religious traditions, where it is said that humankind built a great tower reaching the heavens in the land of Shinar (Mesopotamia). Its story became linked to humanity\'s attempt to attain a godlike status and to the account of the confusion of languages among people. No confirmed archaeological evidence proves the existence of the Tower of Babel as described in the narrative, but the story is thought to have been inspired by the Mesopotamian ziggurats — enormous tiered temples built by civilizations such as the Sumerians and Babylonians during the third and second millennia BC. The Tower of Babel became a universal symbol of human ambition, monumental architecture, and the diversity of cultures and languages.';
+
+  @override
+  String get landmarkHammurabiSteleName => 'Stele of Hammurabi';
+
+  @override
+  String get landmarkHammurabiSteleFact =>
+      'This artifact is the Stele of Hammurabi, one of the most famous monuments of the ancient Babylonian civilization. It dates to the reign of King Hammurabi, who ruled Babylon approximately between 1792 and 1750 BC. Inscribed on it is a collection of laws considered among the oldest written legal codes in history. The carving at its top shows a symbolic scene of Hammurabi receiving authority or legislation from Shamash, the god of justice in Mesopotamia. The stele is of great importance for understanding the system of government, the judiciary, and society in the Babylonian state, and it is currently preserved in the Louvre Museum.';
+
+  @override
+  String get landmarkIshtarGateName => 'Ishtar Gate';
+
+  @override
+  String get landmarkIshtarGateFact =>
+      'The Ishtar Gate is one of the most famous monuments of the ancient city of Babylon. It was built under the Babylonian King Nebuchadnezzar II in the sixth century BC (around 575 BC) as part of his project to expand and beautify the capital of the Neo-Babylonian Empire. The gate was dedicated to the goddess Ishtar and was adorned with glossy blue glazed brick and reliefs of sacred animals such as lions, bulls, and mythical creatures. It served as the ceremonial entrance to the Processional Way leading to the temple of Marduk. Today it stands as one of the most outstanding testaments to the advancement of ancient Babylonian architecture and arts.';
+
+  @override
+  String get landmarkLamassuName => 'Assyrian Lamassu';
+
+  @override
+  String get landmarkLamassuFact =>
+      'The Assyrian Lamassu is a winged guardian statue from the ancient Assyrian civilization, belonging in particular to the Neo-Assyrian Empire period (the ninth to seventh centuries BC). Lamassu figures were placed at the entrances of palaces and temples — such as the palaces of the Assyrian kings at Nimrud, Khorsabad, and Nineveh — in the belief that they protected the building and its inhabitants from evil forces. The statue combines the body of a bull or lion, the wings of a bird, and a human head with a beard and crown, forming a symbol that unites strength, wisdom, and Assyrian royal authority.';
+
+  @override
+  String get landmarkGoldenLyreOfUrName => 'The Golden Lyre (Lyre of Ur)';
+
+  @override
+  String get landmarkGoldenLyreOfUrFact =>
+      'The bull-headed lyre is an ancient musical instrument, with famous examples discovered in the Sumerian city of Ur in southern Mesopotamia, dating to around the middle of the third millennium BC (the Early Sumerian period). It was made of wood and decorated with gold, precious stones, and ivory, and the bull\'s head symbolized strength and fertility and was connected to the religious symbols of Mesopotamian civilization. These lyres were used in religious rituals and royal celebrations, and they count among the oldest evidence of the development of music and stringed-instrument making in history.';
+
+  @override
+  String get landmarkNaramSinSteleName =>
+      'Stele of Naram-Sin (Akkadian Victory Monument)';
+
+  @override
+  String get landmarkNaramSinSteleFact =>
+      'This image represents the Akkadian Victory Monument (the Victory Stele) attributed to King Naram-Sin of the Akkadian Empire, which flourished in Mesopotamia around the twenty-third century BC. The stele depicts King Naram-Sin in a heroic guise, leading his army into battle against his enemies, with celestial symbols at the top signifying the king\'s divine endorsement. This piece is considered one of the most important works of art in the history of Mesopotamia, as it shows the development of narrative sculpture and the use of art to document the victories of kings and reinforce their political and religious standing.';
+
+  @override
+  String get landmarkCuneiformTableName => 'Cuneiform Clay Tablet';
+
+  @override
+  String get landmarkCuneiformTabletFact =>
+      'This image represents a clay tablet inscribed with cuneiform script from the ancient civilizations of Mesopotamia. Clay tablets were used to record administrative, literary, legal, and scientific texts from the third millennium BC onward. Scribes of the Sumerians — and later the Akkadians, Babylonians, and Assyrians — incised cuneiform signs into wet clay using a pointed reed stylus, after which the tablets were dried or fired to preserve them. These tablets represent one of the greatest achievements of Mesopotamian civilization, as they preserved for us information about daily life, the sciences, mythology, and systems of governance in the earliest cities of the ancient world.';
+
+  @override
+  String get landmarkLionOfBabylonName => 'Lion of Babylon';
+
+  @override
+  String get landmarkLionOfBabylonFact =>
+      'This monument is known as the Lion of Babylon, a carved stone statue dating to the Neo-Babylonian period under King Nebuchadnezzar II (around the sixth century BC). It stands in the archaeological city of Babylon in Iraq and depicts a lion standing over a man\'s body, symbolizing the power and majesty of the Babylonian state; it was also associated with symbols of authority and dominance in Babylonian art. The Lion of Babylon is among the most notable artistic testaments reflecting the skill of Babylonian sculptors and their use of stone carving to express royal and religious power.';
 }

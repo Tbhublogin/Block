@@ -94,7 +94,8 @@ lib/
 │       ├── piece_tray_widget.dart
 │       ├── draggable_piece_widget.dart
 │       ├── score_bar_widget.dart
-│       └── civilization_emblem_button.dart
+│       ├── civilization_emblem_button.dart
+│       └── civilization_emblem_painter.dart  # CustomPainter for hand-drawn emblems (no source image) — e.g. civilization #1 (Iraq/Mesopotamia)'s ziggurat + lion motif
 │
 └── ads/
     └── ad_service.dart           # AdMob init, rewarded ad load/show wrapper
@@ -135,7 +136,7 @@ lib/
 |---|---|
 | Splash | Logo, load persisted data. |
 | Main Menu | Play (→ Map), Museum, Settings, (future: Leaderboard). |
-| Map | Shows all 8 civilizations as an illustrated map with the **civilization's own emblem/icon** marking each (NOT a national flag). Locked civilizations shown greyed out/locked until previous one is 100% completed. Tapping an emblem opens Stage Select. |
+| Map | Shows all 8 civilizations as an illustrated map with the **civilization's own emblem/icon** marking each (NOT a national flag). An emblem is *usually* an externally-sourced image (`emblemAsset`), but does not have to be: if no source image exists for a civilization, its emblem is instead hand-drawn in-code via `CustomPainter` (see §11's `Civilization.emblemAsset` note) — civilization #1 (Iraq/Mesopotamia) uses this path, since no emblem artwork was ever generated for it, unlike its 10 landmarks. Locked civilizations shown greyed out/locked until previous one is 100% completed. Tapping an emblem opens Stage Select. |
 | Stage Select | Grid/path of 30 sub-stage nodes for the selected civilization. Locked/unlocked/completed states shown. |
 | Game Screen | The board, piece tray, score bar, target score indicator, pause/settings button. |
 | Stage Win Dialog | Congrats, score summary, stars (optional), button to next stage or map. |
@@ -167,8 +168,9 @@ lib/
 
 ## 10. Content Pipeline (Landmarks & Historical Data)
 
-- Landmark artwork is generated externally (AI image generation from a fixed style prompt, one per landmark) and manually placed into `assets/civilizations/<civilization_id>/<landmark_id>.png`.
-- Historical facts (short paragraph, ar/en) are authored separately and stored in `civilizations_data.dart` (or a JSON asset loaded at startup) keyed by `landmarkId`.
+- Landmark artwork is generated externally (AI image generation from a fixed style prompt, one per landmark) and manually placed into `assets/civilizations/<civilization_id>/<landmark_id>.png`. During development, the developer's own source folder for these raw images (before wiring) is `Pictures/`.
+- Historical facts (short paragraph, ar/en) are authored separately and stored in `civilizations_data.dart` (or a JSON asset loaded at startup) keyed by `landmarkId`. During development, the developer's source file for the raw Arabic facts (with each landmark's name as a header line above its paragraph) is `Historical Text/text.txt`.
+- **Civilization emblem icons are not guaranteed to have a source image.** Where one exists, it's generated the same way as landmark artwork and wired as `emblemAsset`. Where none exists (e.g. civilization #1, Iraq/Mesopotamia — no emblem art was ever generated, unlike its 10 landmarks), the emblem is instead **hand-drawn in-code** via a `CustomPainter` widget (`civilization_emblem_painter.dart`, §4) using the civilization's palette and motifs (e.g. ziggurat + golden lion for Iraq) — this is not a violation of "don't generate/hallucinate image assets" since it's code, not an image file, and it must not fabricate historical details beyond the agreed motif description.
 - Each civilization needs enough unique landmark artworks to cover all the distinct piece shapes used across its 30 stages (exact count to be finalized once shape library is locked).
 
 ## 11. Data Models (summary)
@@ -177,7 +179,9 @@ lib/
 class Civilization {
   final String id;
   final String nameKey;       // localization key
-  final String emblemAsset;   // map icon (not flag)
+  final String? emblemAsset;  // map icon (not flag); NULL means no source image exists —
+                               // render via civilization_emblem_painter.dart (CustomPainter) instead.
+                               // e.g. civilization #1 (Iraq/Mesopotamia) is null-by-design (§10).
   final String themeColorHex;
   final List<Stage> stages;   // 30 stages
 }

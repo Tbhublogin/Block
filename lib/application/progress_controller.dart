@@ -6,8 +6,8 @@
 /// (a civilization's first stage is index 1), so the persistence model stays
 /// exactly PRD 11's `UserProgress` sketch: one `Map<String, int>` in a Hive
 /// box keyed by civilization id. Civilization 1 is unlocked from the start;
-/// civilization N+1 unlocks when civilization N's stage 30 completes, which
-/// also marks civilization N as completed (PRD 5.3).
+/// completing civilization N's stage 30 unlocks the next civilization in
+/// `civilizationsCatalog` (and marks N completed) — PRD 5.3.
 ///
 /// Persistence timing (PRD 12): every mutation writes to Hive immediately,
 /// not only on app close, so progress survives a crash. Hive writes on the
@@ -22,18 +22,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
 import 'package:block_civilizations/core/constants/game_constants.dart';
+import 'package:block_civilizations/data/datasources/civilizations_data.dart';
+import 'package:block_civilizations/domain/models/civilization.dart';
 
 /// Name of the Hive box holding progression data (PRD 3: Hive is the store
 /// for structured progress data). Opened in main() and overridden into
 /// [progressBoxProvider]; tests open their own temp-dir boxes.
 const String progressBoxName = 'progress';
 
-/// Id of the civilization that is unlocked from the start (PRD 5.3), until
-/// the Phase 3 catalog (`civilizations_data.dart`) defines the real
-/// civilization list. Must match the `civilization_N` sequential-id
-/// convention of [_nextCivilizationId]; when the catalog lands, both become
-/// lookups into it.
-const String firstCivilizationId = 'civilization_1';
+/// Id of the civilization that is unlocked from the start (PRD 5.3): the
+/// first entry of `civilizationsCatalog` (currently `iraq`). The catalog
+/// contains only civilization #1 so far; entries 2–8 join it in post-launch
+/// content phases (PROJECT_STATE.md §5). Kept as a literal because
+/// `firstCatalogCivilization.id` is not usable in a const context — add a
+/// test when the catalog grows to assert it stays in sync.
+const String firstCivilizationId = 'iraq';
 
 /// Exposes the app-wide, pre-opened Hive [Box] for progression data.
 ///
@@ -155,13 +158,15 @@ class ProgressController extends Notifier<UserProgress> {
       final highest =
           progress.highestUnlockedStageIndexPerCivilization[civilizationId];
       if (stageIndex >= stagesPerCivilization) {
-        // Final stage: this civilization completes and the next one's
-        // first stage unlocks (PRD 5.3). The stage-30 entry is also stored
-        // so stage select can render "completed" for its node.
+        // Final stage: this civilization completes and the next catalog
+        // civilization's first stage unlocks, when one exists (PRD 5.3).
+        // The stage-30 entry is also stored so stage select can render
+        // "completed" for its node.
+        final nextId = _nextCivilizationId(civilizationId);
         final nextUnlocked = <String, int>{
           ...progress.highestUnlockedStageIndexPerCivilization,
           civilizationId: stagesPerCivilization,
-          _nextCivilizationId(civilizationId): 1,
+          ?nextId: 1,
         };
         return progress.withData(
           highestUnlockedStageIndexPerCivilization: nextUnlocked,
@@ -189,9 +194,10 @@ class ProgressController extends Notifier<UserProgress> {
   }
 
   /// Whether the civilization is playable at all. The first civilization
-  /// ([firstCivilizationId]) is unlocked from the start (PRD 5.3); every
-  /// other one requires its first stage to have been unlocked by the
-  /// previous civilization's completion.
+  /// ([firstCivilizationId], the first [Civilization] in
+  /// [civilizationsCatalog]) is unlocked from the start (PRD 5.3); every other
+  /// one requires its first stage to have been unlocked by the previous
+  /// civilization's completion.
   bool isCivilizationUnlocked(String civilizationId) {
     if (civilizationId == firstCivilizationId) return true;
     return state.highestUnlockedStageIndexPerCivilization.containsKey(
@@ -234,14 +240,17 @@ class ProgressController extends Notifier<UserProgress> {
 
   static const String _completedKey = 'completedCivilizations';
 
-  /// Returns the id of the civilization following [civilizationId] in the
-  /// unlock chain. The map screen's civilization order does not exist in
-  /// code yet (Phase 3 content, PROJECT_STATE open decision), so ids are
-  /// required to be `civilization_N`-style zero-padded-free sequential ids
-  /// (`civilization_1`, `civilization_2`, ...). When the catalog lands this
-  /// becomes a lookup into `civilizations_data.dart`.
-  static String _nextCivilizationId(String civilizationId) {
-    final index = int.tryParse(civilizationId.split('_').last);
-    return 'civilization_${(index ?? 0) + 1}';
+  /// Returns the id of the civilization following [civilizationId] in
+  /// [civilizationsCatalog]'s unlock order, or null when [civilizationId]
+  /// is unknown or is the last entry — in both cases completing it must not
+  /// unlock anything further.
+  static String? _nextCivilizationId(String civilizationId) {
+    for (var i = 0; i < civilizationsCatalog.length; i++) {
+      if (civilizationsCatalog[i].id == civilizationId) {
+        if (i + 1 >= civilizationsCatalog.length) return null;
+        return civilizationsCatalog[i + 1].id;
+      }
+    }
+    return null;
   }
 }

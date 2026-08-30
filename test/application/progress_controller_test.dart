@@ -16,11 +16,13 @@ import 'package:hive/hive.dart';
 
 import 'package:block_civilizations/application/progress_controller.dart';
 import 'package:block_civilizations/core/constants/game_constants.dart';
+import 'package:block_civilizations/data/datasources/civilizations_data.dart';
 
-/// Sequential ids matching the unlock-chain convention
-/// (`civilization_1`, `civilization_2`, ...) that the map's civilization
-/// ordering will use until the Phase 3 catalog defines it. The first is the
-/// production [firstCivilizationId] the controller hard-unlocks.
+/// Catalog ids for the unlock-chain tests. The catalog currently contains
+/// only civilization #1 (iraq), so [_civ1] is the production
+/// [firstCivilizationId] the controller hard-unlocks; [_civ2]/[_civ3] are
+/// not-yet-catalogued ids standing in for future entries 2–8
+/// (PROJECT_STATE.md §5).
 const String _civ1 = firstCivilizationId;
 const String _civ2 = 'civilization_2';
 const String _civ3 = 'civilization_3';
@@ -47,6 +49,17 @@ void main() {
     await _box.deleteFromDisk();
     await _tempDir.delete(recursive: true);
     Hive.resetAdapters();
+  });
+
+  group('ProgressController — catalog sync', () {
+    test('firstCivilizationId stays in sync with the catalog (const-literal '
+        'guard)', () {
+      // firstCivilizationId is a const literal (const-eval cannot read
+      // `.id`), so this test is the guard that it tracks the catalog's
+      // first entry as civilizations 2–8 are added.
+      expect(firstCivilizationId, firstCatalogCivilization.id);
+      expect(civilizationsCatalog.first.id, 'iraq');
+    });
   });
 
   group('ProgressController — fresh install', () {
@@ -160,36 +173,44 @@ void main() {
       },
     );
 
-    test(
-      'completing the final stage unlocks the next civilization from stage 1',
-      () async {
-        final container = _container();
-        final controller = container.read(progressProvider.notifier);
-
-        await controller.markStageCompleted(_civ1, stagesPerCivilization);
-
-        expect(controller.isCivilizationUnlocked(_civ2), isTrue);
-        expect(controller.isStageUnlocked(_civ2, 1), isTrue);
-        expect(controller.isStageUnlocked(_civ2, 2), isFalse);
-        // Civilization 3 is still locked.
-        expect(controller.isCivilizationUnlocked(_civ3), isFalse);
-      },
-    );
-
-    test('a full civilization-to-civilization chain accumulates', () async {
+    test('completing the final stage of the last catalog civilization unlocks '
+        'nothing further', () async {
       final container = _container();
       final controller = container.read(progressProvider.notifier);
 
-      for (var stage = 1; stage <= stagesPerCivilization; stage++) {
-        await controller.markStageCompleted(_civ1, stage);
-      }
-      await controller.markStageCompleted(_civ2, 1);
+      await controller.markStageCompleted(_civ1, stagesPerCivilization);
 
-      final progress = container.read(progressProvider);
-      expect(progress.completedCivilizations, {_civ1});
-      expect(controller.isCivilizationUnlocked(_civ2), isTrue);
-      expect(controller.isStageUnlocked(_civ2, 2), isTrue);
+      // The catalog currently contains only civilization #1 (iraq), so
+      // there is no next civilization to unlock yet — entries 2–8 are
+      // post-launch content (PROJECT_STATE.md §5). The stage-30 entry is
+      // still stored for the "completed" node.
+      expect(controller.isCivilizationUnlocked(_civ2), isFalse);
+      expect(controller.isStageUnlocked(_civ2, 1), isFalse);
+      expect(
+        container
+            .read(progressProvider)
+            .highestUnlockedStageIndexPerCivilization
+            .containsKey(_civ2),
+        isFalse,
+      );
+    });
+
+    test('completing the final stage of an out-of-catalog civilization also '
+        'unlocks nothing further', () async {
+      final container = _container();
+      final controller = container.read(progressProvider.notifier);
+
+      await controller.markStageCompleted(_civ2, stagesPerCivilization);
+
+      // An id the catalog does not know has no successor either.
       expect(controller.isCivilizationUnlocked(_civ3), isFalse);
+      expect(
+        container
+            .read(progressProvider)
+            .highestUnlockedStageIndexPerCivilization
+            .containsKey(_civ3),
+        isFalse,
+      );
     });
 
     test(
@@ -229,7 +250,6 @@ void main() {
       await first
           .read(progressProvider.notifier)
           .markStageCompleted(_civ1, stagesPerCivilization);
-      await first.read(progressProvider.notifier).markStageCompleted(_civ2, 1);
 
       // A brand-new container reading the same box = an app restart.
       final restarted = _container();
@@ -238,12 +258,12 @@ void main() {
       final progress = restarted.read(progressProvider);
       expect(progress.highestUnlockedStageIndexPerCivilization, {
         _civ1: stagesPerCivilization,
-        _civ2: 2,
       });
       expect(progress.completedCivilizations, {_civ1});
-      expect(controller.isCivilizationUnlocked(_civ2), isTrue);
-      expect(controller.isStageUnlocked(_civ2, 2), isTrue);
-      expect(controller.isStageUnlocked(_civ2, 3), isFalse);
+      // The completed first civilization stays fully playable after a
+      // restart (every stage index 1..30 unlocked).
+      expect(controller.isCivilizationUnlocked(_civ1), isTrue);
+      expect(controller.isStageUnlocked(_civ1, stagesPerCivilization), isTrue);
     });
   });
 }
