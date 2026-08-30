@@ -1,0 +1,11 @@
+{
+  "@@locale": "ar",
+  "appTitle": "حضارات المكعبات",
+  "@appTitle": {
+    "description": "The app display name. Placeholder Arabic name — the final app name is not yet decided (see PROJECT_STATE.md open decisions)."
+  },
+  "mainMenuPlay": "العب",
+  "mainMenuMuseum": "المتحف",
+  "mainMenuSettings": "الإعدادات",
+  "underConstruction": "قيد الإنشاء"
+}

@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'application/settings_controller.dart';
+import 'l10n/generated/app_localizations.dart';
 
 /// Root widget: MaterialApp with routing and localization delegates.
 ///
-// TODO (Phase 1): wire localization delegates/supportedLocales from the ARB
-// files, the Riverpod locale provider, and per-civilization theming
-// (BUILD_PROMPTS 0.2 / PRD 4, 7).
-class App extends StatelessWidget {
+// TODO (Phase 1): per-civilization theming (BUILD_PROMPTS 0.3 / PRD 4).
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // TODO (Phase 1): move title and placeholder text into app_ar.arb /
-    // app_en.arb once localization is set up (AI_RULES #6/#7).
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
+
     return MaterialApp(
-      title: 'Block Civilizations',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: locale,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -28,9 +33,11 @@ class _PlaceholderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Block Civilizations')),
-      body: const Center(child: Text('Under construction')),
+      appBar: AppBar(title: Text(l10n.appTitle)),
+      body: Center(child: Text(l10n.underConstruction)),
     );
   }
 }
