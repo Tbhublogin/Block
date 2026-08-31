@@ -10,8 +10,9 @@
 /// `targetScore = orderIndex * 1000` → 1000..30000 across the 30 stages.
 ///
 /// Landmark image assets point at `assets/civilizations/iraq/<landmarkId>.png`
-/// (PRD 10 path convention); the PNG files themselves are attached and copied
-/// in BUILD_PROMPTS 3.2 — this file only declares the paths.
+/// (PRD 10 path convention), via the [iraqLandmarkDir]-based constants in
+/// `core/constants/asset_paths.dart`; the PNG files themselves are the
+/// user-provided finalized artwork, copied verbatim in BUILD_PROMPTS 3.2.
 ///
 /// Facts are NOT authored here — they live in the ARB files behind the
 /// nameKey/historicalFactKey localization keys (AI_RULES #25: never invent
@@ -19,6 +20,7 @@
 /// Arabic in `app_ar.arb`, the template).
 library;
 
+import 'package:block_civilizations/core/constants/asset_paths.dart';
 import 'package:block_civilizations/domain/models/civilization.dart';
 import 'package:block_civilizations/domain/models/landmark_info.dart';
 import 'package:block_civilizations/domain/models/stage.dart';
@@ -85,76 +87,76 @@ const List<Stage> _iraqStages = [
 const List<LandmarkInfo> landmarkCatalog = _iraqLandmarks;
 
 /// Iraq / Mesopotamia's 10 landmarks (names + facts finalized 2026-08-30).
-/// Image files are copied into `assets/civilizations/iraq/` in prompt 3.2.
+/// Image files live in `assets/civilizations/iraq/` (prompt 3.2).
 const List<LandmarkInfo> _iraqLandmarks = [
   LandmarkInfo(
     id: 'hanging_gardens',
     civilizationId: 'iraq',
     nameKey: 'landmarkHangingGardensName',
     historicalFactKey: 'landmarkHangingGardensFact',
-    imageAsset: 'assets/civilizations/iraq/hanging_gardens.png',
+    imageAsset: hangingGardensAsset,
   ),
   LandmarkInfo(
     id: 'ziggurat_of_ur',
     civilizationId: 'iraq',
     nameKey: 'landmarkZigguratOfUrName',
     historicalFactKey: 'landmarkZigguratOfUrFact',
-    imageAsset: 'assets/civilizations/iraq/ziggurat_of_ur.png',
+    imageAsset: zigguratOfUrAsset,
   ),
   LandmarkInfo(
     id: 'tower_of_babel',
     civilizationId: 'iraq',
     nameKey: 'landmarkTowerOfBabelName',
     historicalFactKey: 'landmarkTowerOfBabelFact',
-    imageAsset: 'assets/civilizations/iraq/tower_of_babel.png',
+    imageAsset: towerOfBabelAsset,
   ),
   LandmarkInfo(
     id: 'hammurabi_stele',
     civilizationId: 'iraq',
     nameKey: 'landmarkHammurabiSteleName',
     historicalFactKey: 'landmarkHammurabiSteleFact',
-    imageAsset: 'assets/civilizations/iraq/hammurabi_stele.png',
+    imageAsset: hammurabiSteleAsset,
   ),
   LandmarkInfo(
     id: 'ishtar_gate',
     civilizationId: 'iraq',
     nameKey: 'landmarkIshtarGateName',
     historicalFactKey: 'landmarkIshtarGateFact',
-    imageAsset: 'assets/civilizations/iraq/ishtar_gate.png',
+    imageAsset: ishtarGateAsset,
   ),
   LandmarkInfo(
     id: 'lamassu',
     civilizationId: 'iraq',
     nameKey: 'landmarkLamassuName',
     historicalFactKey: 'landmarkLamassuFact',
-    imageAsset: 'assets/civilizations/iraq/lamassu.png',
+    imageAsset: lamassuAsset,
   ),
   LandmarkInfo(
     id: 'golden_lyre_of_ur',
     civilizationId: 'iraq',
     nameKey: 'landmarkGoldenLyreOfUrName',
     historicalFactKey: 'landmarkGoldenLyreOfUrFact',
-    imageAsset: 'assets/civilizations/iraq/golden_lyre_of_ur.png',
+    imageAsset: goldenLyreOfUrAsset,
   ),
   LandmarkInfo(
     id: 'naram_sin_stele',
     civilizationId: 'iraq',
     nameKey: 'landmarkNaramSinSteleName',
     historicalFactKey: 'landmarkNaramSinSteleFact',
-    imageAsset: 'assets/civilizations/iraq/naram_sin_stele.png',
+    imageAsset: naramSinSteleAsset,
   ),
   LandmarkInfo(
     id: 'cuneiform_tablet',
     civilizationId: 'iraq',
     nameKey: 'landmarkCuneiformTabletName',
     historicalFactKey: 'landmarkCuneiformTabletFact',
-    imageAsset: 'assets/civilizations/iraq/cuneiform_tablet.png',
+    imageAsset: cuneiformTabletAsset,
   ),
   LandmarkInfo(
     id: 'lion_of_babylon',
     civilizationId: 'iraq',
     nameKey: 'landmarkLionOfBabylonName',
     historicalFactKey: 'landmarkLionOfBabylonFact',
-    imageAsset: 'assets/civilizations/iraq/lion_of_babylon.png',
+    imageAsset: lionOfBabylonAsset,
   ),
 ];

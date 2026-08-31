@@ -72,6 +72,14 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
+  # Landmark artwork: the user-provided finalized PNGs, copied verbatim
+  # (BUILD_PROMPTS 3.2 — AI_RULES #24: never regenerate, edit, or alter
+  # these files; path constants live in lib/core/constants/asset_paths.dart).
+  # A directory entry bundles every file directly inside the folder, so each
+  # civilization's folder is registered once.
+  assets:
+    - assets/civilizations/iraq/
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
